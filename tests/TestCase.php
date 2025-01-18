@@ -2,9 +2,15 @@
 
 namespace Baconfy\Support\Tests;
 
-use Orchestra\Testbench\Attributes\WithMigration;
+use function Orchestra\Testbench\workbench_path;
 
-#[WithMigration]
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
+  /**
+   * Define database migrations.
+   */
+  protected function defineDatabaseMigrations(): void
+  {
+    $this->loadMigrationsFrom(workbench_path('database/migrations'));
+  }
 }

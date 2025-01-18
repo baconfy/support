@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "illuminate/support": "^11.38"
+        "illuminate/support": "^11.38",
+        "hashids/hashids": "^5.0"
     },
     "require-dev": {
         "orchestra/testbench": "^9.9",
