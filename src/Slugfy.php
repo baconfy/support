@@ -23,7 +23,7 @@ trait Slugfy
       ? $this->withTrashed()->where($this->getSlugColumn(), 'LIKE', "{$slug}%")->count()
       : $this->where($this->getSlugColumn(), 'LIKE', "{$slug}%")->count();
 
-    return $count ? sprintf('%s-%s', $slug, (new Hashids(now()->timestamp))->encode()) : $slug;
+    return $count ? sprintf('%s-%s', $slug, (new Hashids())->encode(now()->timestamp)) : $slug;
   }
 
   /**

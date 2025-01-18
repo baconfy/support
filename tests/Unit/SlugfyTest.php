@@ -14,3 +14,12 @@ it('can automatically model with different columns', function () {
 
   expect($product->another)->toBe('this-is-an-awesome-name');
 });
+
+it('can automatically slugfy same title model', function () {
+  $one = Post::create(['title' => 'This is an awesome title', 'body' => 'This is an awesome body']);
+  $two = Post::create(['title' => 'This is an awesome title', 'body' => 'This is an awesome body']);
+
+  dd($one->slug, $two->slug);
+
+  expect($one->slug)->not()->toBe($two->slug);
+});
