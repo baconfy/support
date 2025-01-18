@@ -20,7 +20,7 @@ trait Slugfy
     $slug = Str::slug($string);
 
     $count = in_array(SoftDeletes::class, class_uses_recursive(self::class), true)
-      ? $this->withTrash()->where($this->getSlugColumn(), 'LIKE', "{$slug}%")->count()
+      ? $this->withTrashed()->where($this->getSlugColumn(), 'LIKE', "{$slug}%")->count()
       : $this->where($this->getSlugColumn(), 'LIKE', "{$slug}%")->count();
 
     return $count ? sprintf('%s-%s', $slug, (new Hashids(now()->timestamp))->encode()) : $slug;
