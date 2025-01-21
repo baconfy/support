@@ -2,7 +2,7 @@
 
 namespace Workbench\App\Models;
 
-use Baconfy\Support\Slugfy;
+use Baconfy\Support\Concerns\Slugfy;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model

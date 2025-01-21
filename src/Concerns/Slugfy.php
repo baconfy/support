@@ -1,6 +1,6 @@
 <?php
 
-namespace Baconfy\Support;
+namespace Baconfy\Support\Concerns;
 
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\SoftDeletes;
