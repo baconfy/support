@@ -19,7 +19,5 @@ it('can automatically slugfy same title model', function () {
   $one = Post::create(['title' => 'This is an awesome title', 'body' => 'This is an awesome body']);
   $two = Post::create(['title' => 'This is an awesome title', 'body' => 'This is an awesome body']);
 
-  dd($one->slug, $two->slug);
-
   expect($one->slug)->not()->toBe($two->slug);
 });
