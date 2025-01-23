@@ -38,9 +38,9 @@ class Action
   /**
    * Validate the data
    */
-  protected function validate($payload): \Illuminate\Validation\Validator
+  protected function validate($payload): array
   {
-    return Validator::make($payload, $this->rules());
+    return Validator::make($payload, $this->rules())->validate();
   }
 
   /**
