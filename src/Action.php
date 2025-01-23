@@ -4,16 +4,14 @@ namespace Baconfy\Support;
 
 use Baconfy\Support\Concerns\Transaction;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class Action
 {
   /**
-   * Make a static class
+   * Validation rules
    */
-  public static function make(): static
-  {
-    return app(static::class);
-  }
+  protected array $rules = [];
 
   /**
    * Action entry point
@@ -27,5 +25,29 @@ class Action
     }
 
     return static::make()->handle(...$arguments);
+  }
+
+  /**
+   * Make a static class
+   */
+  public static function make(): static
+  {
+    return app(static::class);
+  }
+
+  /**
+   * Validate the data
+   */
+  protected function validate($payload): \Illuminate\Validation\Validator
+  {
+    return Validator::make($payload, $this->rules());
+  }
+
+  /**
+   * Get a list of validation rules
+   */
+  protected function rules(): array
+  {
+    return $this->rules;
   }
 }
