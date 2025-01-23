@@ -9,11 +9,6 @@ use Illuminate\Support\Facades\Validator;
 class Action
 {
   /**
-   * Validation rules
-   */
-  protected array $rules = [];
-
-  /**
    * Action entry point
    */
   public static function run(mixed ...$arguments): mixed
@@ -46,8 +41,8 @@ class Action
   /**
    * Get a list of validation rules
    */
-  protected function rules(): array
+  public function rules(): array
   {
-    return $this->rules;
+    return [];
   }
 }
