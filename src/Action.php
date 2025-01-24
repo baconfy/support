@@ -33,8 +33,8 @@ class Action
   /**
    * Validate the data
    */
-  protected function validate($payload): array
+  protected function validate($payload, mixed $attachment = null): array
   {
-    return Validator::make($payload, $this->rules($payload) ?? [])->validate();
+    return Validator::make($payload, $this->rules($attachment))->validate();
   }
 }
