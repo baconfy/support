@@ -2,12 +2,11 @@
 
 namespace Baconfy\Support\Tests\Fake;
 
-use Baconfy\Support\Action;
-use Baconfy\Support\Concerns\Transaction;
+use Baconfy\Support\Concerns\TransactionRunner;
 
-class TransactionalAction extends Action
+class TransactionalAction
 {
-  use Transaction;
+  use TransactionRunner;
 
   public function handle(): bool
   {

@@ -1,14 +1,18 @@
 <?php
 
-use Baconfy\Support\Action;
 use Baconfy\Support\Tests\Fake\ConcatenateTwoStrings;
 use Baconfy\Support\Tests\Fake\TransactionalAction;
+use Baconfy\Support\Concerns\Runner;
 use Illuminate\Support\Facades\DB;
 
-it('can make an action without run', function () {
+it('use a runner trait', function () {
+  expect(ConcatenateTwoStrings::class)->toUseTrait(Runner::class);
+});
+
+it('can make an runner class', function () {
   $concatenate = ConcatenateTwoStrings::make();
 
-  expect($concatenate)->toBeInstanceOf(Action::class);
+  expect($concatenate)->toBeInstanceOf(ConcatenateTwoStrings::class);
 });
 
 it('can extends an Action class', function () {
