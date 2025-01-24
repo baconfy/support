@@ -35,14 +35,6 @@ class Action
    */
   protected function validate($payload): array
   {
-    return Validator::make($payload, $this->rules())->validate();
-  }
-
-  /**
-   * Get a list of validation rules
-   */
-  public function rules(): array
-  {
-    return [];
+    return Validator::make($payload, $this->rules($payload) ?? [])->validate();
   }
 }
