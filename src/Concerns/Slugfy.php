@@ -11,7 +11,7 @@ trait Slugfy
   public static function bootSlugfy(): void
   {
     self::creating(function (self $model) {
-      $model->{$model->getSlugColumn()} = $model->slugfy($model->{$model->getAttributeToBeSlugified()});
+      $model->{$model->getSlugColumn()} = $model->{$model->getSlugColumn()} ?? $model->slugfy($model->{$model->getAttributeToBeSlugified()});
     });
   }
 
