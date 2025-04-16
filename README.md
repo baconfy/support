@@ -50,7 +50,7 @@ use App\Actions\CreatePostAction;
 
 class PostController
 {
-    public function stora(Request $request)
+    public function store(Request $request)
     {
         CreatePostAction::run($request->all());
 
