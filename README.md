@@ -17,21 +17,60 @@ composer require baconfy/support
 
 ## ⚙️ Usage
 
+### Runners
+
+Simple static style actions:
+
+```php
+namespace App\Actions;
+
+use App\Models\Post;
+use App\Events\PostHasBeenCreated;
+use Baconfy\Support\Concerns\Runner;
+
+class CreatePostAction
+{
+    use Runner;
+
+    public function handle(array $payload): Post
+    {
+        $post = Post::create($payload);
+
+        event(new PostHasBeenCreated($post));
+
+        return $post;
+    }
+}
+```
+
+```php
+namespace App\Controllers;
+
+use App\Actions\CreatePostAction;
+
+class PostController
+{
+    public function stora(Request $request)
+    {
+        CreatePostAction::run($request->all());
+
+        return back();
+    }
+}
+```
+
+
+
 ### UUIDs
 
 Add automatic UUIDs to your models:
 
 ```php
-use Baconfy\Support\Traits\HasUuid;
+use Baconfy\Support\Concerns\Uuid;
 
 class User extends Model
 {
-    use HasUuid;
-
-    protected function getUuidColumn(): string
-    {
-        return 'uuid';
-    }
+    use Uuid;
 }
 ```
 
@@ -40,21 +79,11 @@ class User extends Model
 Generate unique slugs from an attribute:
 
 ```php
-use Baconfy\Support\Traits\HasSlug;
+use Baconfy\Support\Concerns\Slugfy;
 
 class Post extends Model
 {
-    use HasSlug;
-
-    protected function getSlugColumn(): string
-    {
-        return 'slug';
-    }
-
-    protected function getAttributeToBeSlugified(): string
-    {
-        return 'title';
-    }
+    use Slugfy;
 }
 ```
 
