@@ -6,10 +6,10 @@ use Baconfy\Support\Concerns\TransactionRunner;
 
 class TransactionalAction
 {
-  use TransactionRunner;
+    use TransactionRunner;
 
-  public function handle(): bool
-  {
-    return true;
-  }
+    public function handle(): bool
+    {
+        return true;
+    }
 }

@@ -6,6 +6,9 @@ use Illuminate\Support\Str;
 
 trait Uuid
 {
+    /**
+     * Boot the UUID functionality for the model.
+     */
     public static function bootUuid(): void
     {
         self::creating(function (self $model) {

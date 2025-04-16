@@ -8,37 +8,43 @@ use Illuminate\Support\Str;
 
 trait Slugfy
 {
-  public static function bootSlugfy(): void
-  {
-    self::creating(function (self $model) {
-      $model->{$model->getSlugColumn()} = $model->{$model->getSlugColumn()} ?? $model->slugfy($model->{$model->getAttributeToBeSlugified()});
-    });
-  }
+    /**
+     * Boot the Slugfy trait method.
+     */
+    public static function bootSlugfy(): void
+    {
+        self::creating(function (self $model) {
+            $model->{$model->getSlugColumn()} = $model->{$model->getSlugColumn()} ?? $model->slugfy($model->{$model->getAttributeToBeSlugified()});
+        });
+    }
 
-  public function slugfy(string $string): string
-  {
-    $slug = Str::slug($string);
+    /**
+     * Identifies which column should store the slug value
+     */
+    protected function getSlugColumn(): string
+    {
+        return 'slug';
+    }
 
-    $count = in_array(SoftDeletes::class, class_uses_recursive(self::class), true)
-      ? $this->withTrashed()->where($this->getSlugColumn(), 'LIKE', "{$slug}%")->count()
-      : $this->where($this->getSlugColumn(), 'LIKE', "{$slug}%")->count();
+    /**
+     * Generate a unique slug from the given string.
+     */
+    public function slugfy(string $string): string
+    {
+        $slug = Str::slug($string);
 
-    return $count ? sprintf('%s-%s', $slug, (new Hashids())->encode(now()->timestamp)) : $slug;
-  }
+        $count = in_array(SoftDeletes::class, class_uses_recursive(self::class), true)
+            ? $this->withTrashed()->where($this->getSlugColumn(), 'LIKE', "{$slug}%")->count()
+            : $this->where($this->getSlugColumn(), 'LIKE', "{$slug}%")->count();
 
-  /**
-   * Identifies which column should store the slug value
-   */
-  protected function getSlugColumn(): string
-  {
-    return 'slug';
-  }
+        return $count ? sprintf('%s-%s', $slug, (new Hashids())->encode(now()->timestamp)) : $slug;
+    }
 
-  /**
-   * Identifies which attribute should be used to generate the slug
-   */
-  protected function getAttributeToBeSlugified(): string
-  {
-    return 'title';
-  }
+    /**
+     * Identifies which attribute should be used to generate the slug
+     */
+    protected function getAttributeToBeSlugified(): string
+    {
+        return 'title';
+    }
 }

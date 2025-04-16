@@ -6,15 +6,15 @@ use Illuminate\Support\Facades\DB;
 
 trait TransactionRunner
 {
-  use Runner;
+    use Runner;
 
-  /**
-   * Action entry point
-   */
-  public static function run(mixed ...$arguments): mixed
-  {
-    return DB::transaction(function () use ($arguments) {
-      return static::make()->handle(...$arguments);
-    });
-  }
+    /**
+     * Action entry point
+     */
+    public static function run(mixed ...$arguments): mixed
+    {
+        return DB::transaction(function () use ($arguments) {
+            return static::make()->handle(...$arguments);
+        });
+    }
 }
