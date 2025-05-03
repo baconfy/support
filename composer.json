@@ -42,7 +42,8 @@
       "Composer\\Config::disableProcessTimeout",
       "@build",
       "@php vendor/bin/testbench serve --ansi"
-    ]
+    ],
+    "test": "pest --parallel --coverage --exactly=100"
   },
   "config": {
     "allow-plugins": {
