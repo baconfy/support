@@ -4,10 +4,11 @@ namespace Workbench\App\Models;
 
 use Baconfy\Support\Concerns\Slugfy;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-  use Slugfy;
+  use Slugfy, SoftDeletes;
 
   /**
    * The attributes that are mass assignable.
