@@ -2,6 +2,7 @@
 
 
 use Illuminate\Support\Facades\Storage;
+use function Baconfy\Support\image;
 
 it('ensures the image function returns a string', function () {
     Storage::fake();

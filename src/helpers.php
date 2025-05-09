@@ -1,8 +1,10 @@
 <?php
 
+
+namespace Baconfy\Support;
+
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-
 
 function image(?string $name = null, ?int $width = 1920, ?int $height = 1080): string
 {
