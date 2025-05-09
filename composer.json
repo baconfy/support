@@ -23,6 +23,9 @@
     }
   },
   "autoload-dev": {
+    "files": [
+      "src/helpers.php"
+    ],
     "psr-4": {
       "Baconfy\\Support\\Tests\\": "tests/",
       "Workbench\\App\\": "workbench/app/",
