@@ -68,6 +68,86 @@ final class User extends Authenticatable implements MustVerifyEmail
 
 ```
 
+### FormRequest
+
+A better way to validate your forms. If you don't have a validation for some request, just don't write the method.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Requests;
+
+use App\Models\User;
+use Baconfy\Support\Http\FormRequest;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
+
+final class ProfileRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+    
+    /**
+     * Get the validation rules that apply to the get request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function view(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)],
+        ];
+    }
+    
+    /**
+     * Get the validation rules that apply to the post request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function store(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)],
+        ];
+    }
+    
+    /**
+     * Get the validation rules that apply to the put/patch request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function update(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
+            'account' => ['required', 'string', 'lowercase', 'max:32', Rule::unique(User::class)->ignore($this->user()->id)],
+        ];
+    }
+
+    /**
+     * Get the validation rules that apply to the delete request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function destroy(): array
+    {
+        return [
+            'password' => ['required', 'current_password'],
+        ];
+    }
+}
+```
+
 ### UUIDs
 
 Add automatic UUIDs to your models:
