@@ -17,6 +17,59 @@ composer require baconfy/support
 
 ## ⚙️ Usage
 
+### Casts
+
+Storage cast for eloquent models
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use Baconfy\Support\Casts\AsStorage;
+use Database\Factories\UserFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+final class User extends Authenticatable implements MustVerifyEmail
+{
+    /** @use HasFactory<UserFactory> */
+    use HasFactory, Notifiable, SoftDeletes;
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    public function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'avatar' => AsStorage::class,
+        ];
+    }
+}
+
+```
+
+
+
 ### Runners
 
 Simple static style actions:
