@@ -70,7 +70,7 @@ final class User extends Authenticatable implements MustVerifyEmail
 
 ### FormRequest
 
-A better way to validate your forms. If you don't have a validation for some request, just don't write the method.
+A better way to validate your forms. Available methods: `authorize`, `view`, `store`, `update`, `destroy`.
 
 ```php
 <?php
@@ -86,27 +86,6 @@ use Illuminate\Validation\Rule;
 
 final class ProfileRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-    
-    /**
-     * Get the validation rules that apply to the get request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
-    public function view(): array
-    {
-        return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)],
-        ];
-    }
-    
     /**
      * Get the validation rules that apply to the post request.
      *
@@ -130,19 +109,6 @@ final class ProfileRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
-            'account' => ['required', 'string', 'lowercase', 'max:32', Rule::unique(User::class)->ignore($this->user()->id)],
-        ];
-    }
-
-    /**
-     * Get the validation rules that apply to the delete request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
-    public function destroy(): array
-    {
-        return [
-            'password' => ['required', 'current_password'],
         ];
     }
 }
