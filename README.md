@@ -68,52 +68,6 @@ final class User extends Authenticatable implements MustVerifyEmail
 
 ```
 
-
-
-### Runners
-
-Simple static style actions:
-
-```php
-namespace App\Actions;
-
-use App\Models\Post;
-use App\Events\PostHasBeenCreated;
-use Baconfy\Support\Concerns\Runner;
-
-class CreatePostAction
-{
-    use Runner;
-
-    public function handle(array $payload): Post
-    {
-        $post = Post::create($payload);
-
-        event(new PostHasBeenCreated($post));
-
-        return $post;
-    }
-}
-```
-
-```php
-namespace App\Controllers;
-
-use App\Actions\CreatePostAction;
-
-class PostController
-{
-    public function store(Request $request)
-    {
-        CreatePostAction::run($request->all());
-
-        return back();
-    }
-}
-```
-
-
-
 ### UUIDs
 
 Add automatic UUIDs to your models:
