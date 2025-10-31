@@ -4,7 +4,7 @@ namespace Baconfy\Support\Tests\Fakes;
 
 use Baconfy\Support\Concerns\Enums\ToArray;
 
-enum FakeEnum: string
+enum FakeStatus: string
 {
     use ToArray;
 
