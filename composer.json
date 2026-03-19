@@ -10,11 +10,11 @@
     }
   ],
   "require": {
-    "illuminate/support": "^11|^12",
+    "illuminate/support": "^11|^12|^13",
     "hashids/hashids": "^5.0"
   },
   "require-dev": {
-    "orchestra/testbench": "^9.9",
+    "orchestra/testbench": "^9.9|^10.0|^11.0",
     "pestphp/pest": "^3.7"
   },
   "autoload": {
