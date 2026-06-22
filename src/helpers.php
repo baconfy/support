@@ -18,4 +18,15 @@ function image(?string $name = null, ?int $width = 1920, ?int $height = 1080): s
     return Storage::url($filename);
 }
 
+if (!function_exists('fqdn')) {
+    function fqdn(string $url): string
+    {
+        $url = trim($url);
 
+        if (!str_contains($url, '://')) {
+            $url = 'https://'.$url;
+        }
+
+        return strtolower((string) parse_url($url, PHP_URL_HOST));
+    }
+}
