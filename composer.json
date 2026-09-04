@@ -20,14 +20,14 @@
     "pestphp/pest": "^3.7"
   },
   "autoload": {
+    "files": [
+      "src/helpers.php"
+    ],
     "psr-4": {
       "Baconfy\\Support\\": "src/"
     }
   },
   "autoload-dev": {
-    "files": [
-      "src/helpers.php"
-    ],
     "psr-4": {
       "Baconfy\\Support\\Tests\\": "tests/",
       "Workbench\\App\\": "workbench/app/",
