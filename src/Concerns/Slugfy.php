@@ -33,11 +33,21 @@ trait Slugfy
     {
         $slug = Str::slug($string);
 
-        $count = in_array(SoftDeletes::class, class_uses_recursive(self::class), true)
-            ? $this->withTrashed()->where($this->getSlugColumn(), 'LIKE', "{$slug}%")->count()
-            : $this->where($this->getSlugColumn(), 'LIKE', "{$slug}%")->count();
+        $query = in_array(SoftDeletes::class, class_uses_recursive(self::class), true)
+            ? static::withTrashed()
+            : static::query();
 
-        return $count ? sprintf('%s-%s', $slug, (new Hashids())->encode(now()->timestamp)) : $slug;
+        // Equality, not a prefix: "foo" is free even when "foo-bar" exists.
+        if (! $query->where($this->getSlugColumn(), $slug)->exists()) {
+            return $slug;
+        }
+
+        // The suffix carries the second and a random part, so two rows in the
+        // same second no longer share it. Lowercase alphabet: a slug stays a
+        // slug. The unique index remains the final guard.
+        $hashids = new Hashids('', 0, 'abcdefghijklmnopqrstuvwxyz0123456789');
+
+        return sprintf('%s-%s', $slug, $hashids->encode(now()->timestamp, random_int(0, 0xFFFFFF)));
     }
 
     /**
