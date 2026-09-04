@@ -166,3 +166,45 @@ it('refuses any input when no rules are declared', function (): void {
     // that forgot its rules fails closed rather than open.
     expect(fn () => (new Ping)(['anything' => 1]))->toThrow(ValidationException::class);
 });
+
+/**
+ * Declares a field with `confirmed`, and nothing about its companion.
+ *
+ * @extends Intent<string>
+ */
+final class Confirms extends Intent
+{
+    /** @param array<string, array<int, mixed>> $rules */
+    public function __construct(private readonly array $rules) {}
+
+    protected function rules(): array
+    {
+        return $this->rules;
+    }
+
+    protected function handle(array $data): string
+    {
+        return $data['password'];
+    }
+}
+
+it('treats the companion of a confirmed field as declared', function (): void {
+    $intent = new Confirms(['password' => ['required', 'confirmed']]);
+
+    // `confirmed` reads `password_confirmation` without anyone listing it. A
+    // base that refused it broke the most common rule in the framework.
+    expect($intent(['password' => 'secret', 'password_confirmation' => 'secret']))->toBe('secret');
+});
+
+it('honours a confirmed field that names its own companion', function (): void {
+    $intent = new Confirms(['password' => ['required', 'confirmed:repeat']]);
+
+    expect($intent(['password' => 'secret', 'repeat' => 'secret']))->toBe('secret');
+});
+
+it('still refuses a companion nothing declared', function (): void {
+    $intent = new Confirms(['password' => ['required']]);
+
+    expect(fn () => $intent(['password' => 'secret', 'password_confirmation' => 'secret']))
+        ->toThrow(ValidationException::class);
+});

@@ -101,6 +101,9 @@ abstract class Intent
     /**
      * A rule for `address.city` or `items.*.id` declares `address` and
      * `items`; what matters is the top-level key the input arrived under.
+     * A `confirmed` rule declares its companion as well — `password_confirmation`,
+     * or whatever `confirmed:name` points at — since the rule reads it without
+     * anyone listing it.
      *
      * @param  array<string, mixed>  $data
      * @param  array<string, array<int, mixed>>  $rules
@@ -109,7 +112,21 @@ abstract class Intent
      */
     private function rejectUndeclared(array $data, array $rules): void
     {
-        $declared = array_map(static fn(string $key): string => explode('.', $key, 2)[0], array_keys($rules));
+        $declared = [];
+
+        foreach ($rules as $field => $set) {
+            $declared[] = $top = explode('.', $field, 2)[0];
+
+            foreach ($set as $rule) {
+                if (! is_string($rule) || ! str_starts_with($rule, 'confirmed')) {
+                    continue;
+                }
+
+                $declared[] = str_starts_with($rule, 'confirmed:')
+                    ? substr($rule, strlen('confirmed:'))
+                    : $top.'_confirmation';
+            }
+        }
 
         $undeclared = array_diff(array_keys($data), $declared);
         if ($undeclared === []) {
