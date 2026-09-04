@@ -11,7 +11,9 @@
   ],
   "require": {
     "illuminate/support": "^11|^12|^13",
-    "hashids/hashids": "^5.0"
+    "hashids/hashids": "^5.0",
+    "illuminate/validation": "^11|^12|^13",
+    "illuminate/auth": "^11|^12|^13"
   },
   "require-dev": {
     "orchestra/testbench": "^9.9|^10.0|^11.0",
