@@ -1,21 +1,22 @@
-# 🍳 Baconfy Support
+# Baconfy Support
 
-A handy Laravel support package offering reusable traits for common model behavior like UUIDs and slugs — perfect for keeping your code clean and consistent.
+A handy Laravel support package: reusable traits for common model behavior — UUIDs, ULIDs, slugs — a storage cast, a FormRequest with per-verb rules, and a base for application intents that validate and authorize before they act.
 
-## 🚀 Features
+## Features
 
-- ✅ Auto UUID generation for Eloquent models
-- 🔗 Unique slugs (with optional soft delete awareness)
-- 🧩 Drop-in traits — quick to use, easy to maintain
-- 🔄 Minimal setup, maximum utility
+- Auto UUID and ULID generation for Eloquent models
+- Unique slugs (with optional soft delete awareness)
+- Intents: one class per thing the app can be asked to do, callable from any entry point
+- Drop-in traits — quick to use, easy to maintain
+- Minimal setup, maximum utility
 
-## 📦 Installation
+## Installation
 
 ```bash
 composer require baconfy/support
 ```
 
-## ⚙️ Usage
+## Usage
 
 ### Casts
 
@@ -127,6 +128,21 @@ class User extends Model
 }
 ```
 
+### ULIDs
+
+Same idea, sortable by time. Fills a `ulid` column on create:
+
+```php
+use Baconfy\Support\Concerns\Ulid;
+
+class Order extends Model
+{
+    use Ulid;
+}
+```
+
+> Both traits fill a **secondary** column next to your usual `id`. For a ULID or UUID primary key, use Laravel's own `HasUlids` / `HasUuids`.
+
 ### Slugs
 
 Generate unique slugs from an attribute:
@@ -142,7 +158,46 @@ class Post extends Model
 
 > ✨ If the slug already exists, a suffix is added automatically to keep it unique — even with soft deletes!
 
-## 📄 License
+### Intents
+
+One class per thing the application can be asked to do — register a user, close a month — callable the same way from a controller, a console command or an MCP tool. It runs the FormRequest lifecycle without the HTTP: `sanitize` → `authorize` → `rules` → `after` → `handle`. Only `__invoke` is public, so nothing reaches `handle()` without passing the checks.
+
+```php
+use Baconfy\Support\Intent;
+
+/** @extends Intent<User> */
+final class RegisterUser extends Intent
+{
+    public function __construct(private readonly CreateUser $createUser) {}
+
+    protected function sanitize(array $data): array
+    {
+        return [...$data, 'email' => strtolower($data['email'] ?? '')];
+    }
+
+    protected function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users'],
+            'password' => ['required', 'confirmed', Password::defaults()],
+        ];
+    }
+
+    protected function handle(array $data): User
+    {
+        return ($this->createUser)($data['name'], $data['email'], $data['password']);
+    }
+}
+
+$user = $registerUser($request->all());
+```
+
+Every hook is optional but `handle()`. Failures throw — `ValidationException`, `AuthorizationException` — and the entry point decides how to answer.
+
+> A field with no rule is **refused**, not dropped. Input may come from a console argument or a tool call as easily as from a form, and a key nobody declared is a key nobody checked. An intent with no rules accepts no input at all.
+
+## License
 
 MIT — do what you want, just give credit.  
 Made with ❤️ by [Baconfy](https://github.com/baconfy)
